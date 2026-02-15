@@ -1,85 +1,87 @@
 # DWD MCP Server
 
-Ein MCP-Server (Model Context Protocol) für Wetterdaten des Deutschen Wetterdienstes (DWD) via [Bright Sky API](https://brightsky.dev/).
+An MCP server (Model Context Protocol) for weather data from the German Weather Service (DWD) via [Bright Sky API](https://brightsky.dev/).
 
 ## Features
 
-- **Aktuelles Wetter** (`get_current_weather`) - Temperatur, Wind, Niederschlag, Bewölkung etc.
-- **Wettervorhersage** (`get_weather_forecast`) - Stündliche Vorhersage und Tageszusammenfassungen
-- **Wetterwarnungen** (`get_weather_alerts`) - Amtliche DWD-Warnungen (Sturm, Gewitter, Frost etc.)
-- **Wetterstationen** (`find_weather_station`) - Nächstgelegene DWD-Stationen finden
+- **Current Weather** (`get_current_weather`) - Temperature, wind, precipitation, cloud cover, etc.
+- **Weather Forecast** (`get_weather_forecast`) - Hourly forecasts and daily summaries
+- **Weather Alerts** (`get_weather_alerts`) - Official DWD warnings (storm, thunderstorm, frost, etc.)
+- **Weather Stations** (`find_weather_station`) - Find nearest DWD stations
 
 ## Installation
 
-### Mit uv (empfohlen)
+### With uv (recommended)
 
 ```bash
-# Repository klonen
+# Clone repository
 git clone https://github.com/your-username/dwd-mcp-server.git
 cd dwd-mcp-server
 
-# Dependencies installieren
+# Install dependencies
 uv sync
 
-# Entwicklungs-Dependencies (optional)
+# Development dependencies (optional)
 uv sync --extra dev
 ```
 
-### Mit pip
+### With pip
 
 ```bash
 pip install -e .
 
-# Mit Entwicklungs-Dependencies
+# With development dependencies
 pip install -e ".[dev]"
 ```
 
-## Verwendung
+## Usage
 
-### Als MCP-Server starten
+### Start as MCP server
 
 ```bash
-# Mit uv
-uv run dwd-mcp-server
+# With uv
+uv run dwd-mcp-server start
 
-# Oder direkt mit Python
-python -m dwd_mcp_server.server
+# Or directly with Python
+python -m dwd_mcp_server.cli start
 ```
 
-### In Claude Desktop einbinden
+### Integrate with Claude Desktop
 
-Füge folgende Konfiguration zu deiner Claude Desktop `config.json` hinzu:
+Add the following configuration to your Claude Desktop `config.json`:
 
 ```json
 {
   "mcpServers": {
     "dwd-weather": {
       "command": "uv",
-      "args": ["--directory", "/pfad/zu/dwd-mcp-server", "run", "dwd-mcp-server"]
+      "args": ["--directory", "/path/to/dwd-mcp-server", "run", "dwd-mcp-server", "start"]
     }
   }
 }
 ```
 
-### In Claude Code einbinden
+### Integrate with Claude Code
 
 ```bash
-claude mcp add dwd-weather -- uv --directory /pfad/zu/dwd-mcp-server run dwd-mcp-server
+claude mcp add dwd-weather -- uv --directory /path/to/dwd-mcp-server run dwd-mcp-server start
 ```
 
 ## MCP Tools
 
 ### `get_current_weather`
 
-Aktuelles Wetter für einen Ort abrufen.
+Get current weather for a location.
 
-**Parameter:**
-- `location` (string, required): Ortsname (z.B. "Aachen", "München") oder Koordinaten (z.B. "50.7753,6.0839")
+**Parameters:**
 
-**Beispiel-Rückgabe:**
+- `location` (string, required): City name (e.g., "Aachen", "Munich") or coordinates (e.g., "50.7753,6.0839")
+
+**Example response:**
+
 ```json
 {
-  "timestamp": "Sa, 15.02.2026 14:00",
+  "timestamp": "Sat, 15.02.2026 14:00",
   "temperature_c": 8.2,
   "feels_like_c": 5.5,
   "humidity_percent": 78,
@@ -94,63 +96,66 @@ Aktuelles Wetter für einen Ort abrufen.
 
 ### `get_weather_forecast`
 
-Wettervorhersage für einen Ort abrufen.
+Get weather forecast for a location.
 
-**Parameter:**
-- `location` (string, required): Ortsname oder Koordinaten
-- `days` (integer, optional): Anzahl Tage (1-10, Standard: 3)
+**Parameters:**
 
-**Rückgabe:** Stündliche Daten und Tageszusammenfassungen mit Min/Max-Temperaturen.
+- `location` (string, required): City name or coordinates
+- `days` (integer, optional): Number of days (1-10, default: 3)
+
+**Returns:** Hourly data and daily summaries with min/max temperatures.
 
 ### `get_weather_alerts`
 
-Amtliche Wetterwarnungen abrufen.
+Get official weather alerts.
 
-**Parameter:**
-- `location` (string, optional): Ortsname oder Koordinaten. Ohne Angabe: alle Warnungen für Deutschland.
+**Parameters:**
 
-**Rückgabe:** Liste aktiver Warnungen mit Typ, Schweregrad, Beschreibung und Gültigkeitszeitraum.
+- `location` (string, optional): City name or coordinates. If omitted: all alerts for Germany.
+
+**Returns:** List of active alerts with type, severity, description, and validity period.
 
 ### `find_weather_station`
 
-Nächstgelegene DWD-Wetterstationen finden.
+Find nearest DWD weather stations.
 
-**Parameter:**
-- `location` (string, required): Ortsname oder Koordinaten
+**Parameters:**
 
-**Rückgabe:** Liste der Stationen mit Name, ID und Entfernung.
+- `location` (string, required): City name or coordinates
+
+**Returns:** List of stations with name, ID, and distance.
 
 ## Geocoding
 
-Der Server akzeptiert verschiedene Ortsangaben:
+The server accepts various location inputs:
 
-1. **Direkte Koordinaten:** `"50.7753,6.0839"` oder `"50.7753, 6.0839"`
-2. **Deutsche Städte:** `"Aachen"`, `"München"`, `"Köln"` (ca. 100 Städte integriert)
-3. **Nominatim-Fallback:** Für unbekannte Orte wird OpenStreetMap/Nominatim abgefragt
+1. **Direct coordinates:** `"50.7753,6.0839"` or `"50.7753, 6.0839"`
+2. **German cities:** `"Aachen"`, `"Munich"`, `"Cologne"` (approx. 100 cities included)
+3. **Nominatim fallback:** For unknown locations, OpenStreetMap/Nominatim is queried
 
 ## Tests
 
 ```bash
-# Mit uv
+# With uv
 uv run pytest
 
-# Mit pytest direkt
+# With pytest directly
 pytest
 ```
 
-## Technologie-Stack
+## Technology Stack
 
 - **MCP Framework:** [mcp Python SDK](https://github.com/modelcontextprotocol/python-sdk) (FastMCP)
 - **HTTP Client:** httpx (async)
-- **Datenquelle:** [Bright Sky API](https://brightsky.dev/) (DWD Open Data)
-- **Geocoding:** Integrierte Städtetabelle + Nominatim-Fallback
+- **Data Source:** [Bright Sky API](https://brightsky.dev/) (DWD Open Data)
+- **Geocoding:** Built-in city table + Nominatim fallback
 
-## Lizenz
+## License
 
 MIT
 
-## Datenquellen
+## Data Sources
 
-- Wetterdaten: [DWD Open Data](https://www.dwd.de/EN/ourservices/opendata/opendata.html)
+- Weather data: [DWD Open Data](https://www.dwd.de/EN/ourservices/opendata/opendata.html)
 - API: [Bright Sky](https://brightsky.dev/)
 - Geocoding: [Nominatim/OpenStreetMap](https://nominatim.openstreetmap.org/)
