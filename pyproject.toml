@@ -1,0 +1,80 @@
+[project]
+name = "dwd-mcp-server"
+version = "0.1.0"
+description = "MCP Server für DWD Wetterdaten via Bright Sky API"
+readme = "README.md"
+authors = [
+    { name = "Matze", email = "matthias.teloeken@posteo.de" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "mcp>=1.9",
+    "httpx>=0.27",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.24",
+    "ruff>=0.8",
+]
+
+[project.scripts]
+dwd-mcp-server = "dwd_mcp_server:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/dwd_mcp_server"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["--import-mode=importlib"]
+
+[tool.ruff]
+line-length = 120
+indent-width = 4
+
+target-version = "py311"
+
+[tool.ruff.lint]
+select = [
+    "A",  # flake8-builtins
+    "ANN",  # mypy
+    "ARG",  # flake8-unused-arguments
+    "B",  # Bugbear
+    "C4",  # flake8-comprehensions
+    "DTZ",  # flake8-datetimez
+    "E",  # pycodestyle
+    "F",  # Pyflakes
+    "FLY",  # flynt
+    "FA",  # flake8-fututre-annotations
+    "I",  # isort
+    "PTH",  # flake8-use-pathlib
+    "SIM",  # flake8-simplify
+    # "T20",  # flake8-print
+    "TCH",  # flake8-type-checking
+    "UP",  # pyupgrade
+    "W",  # pycodestyle
+    "C90",  # mccabe
+]
+
+[tool.ruff.format]
+quote-style = "preserve"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.pyright]
+typeCheckingMode = "basic"
+reportMissingTypeStubs = false
+executionEnvironments = [
+    { root = "src" }, # necessary for relative imports
+]
+venvPath = "."
+venv = ".venv"
