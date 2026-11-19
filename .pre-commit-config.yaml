@@ -10,19 +10,19 @@ repos:
       - id: check-shebang-scripts-are-executable
       - id: end-of-file-fixer
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.21.2
+    rev: v3.22.0
     hooks:
       - id: pyupgrade
         args:
           - "--py314-plus"
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.11
+    rev: v0.17.6
     hooks:
       - id: ruff
         args: [--fix]
       - id: ruff-format
   - repo: https://github.com/RobertCraigie/pyright-python
-    rev: v1.1.408
+    rev: v1.1.414
     hooks:
     - id: pyright
       args:

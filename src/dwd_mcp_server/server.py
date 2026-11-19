@@ -3,7 +3,7 @@
 import json
 from typing import Annotated
 
-from mcp.server.fastmcp import FastMCP
+from mcp.server.mcpserver import MCPServer
 
 from dwd_mcp_server.brightsky_client import (
     BrightSkyClient,
@@ -16,7 +16,7 @@ from dwd_mcp_server.brightsky_client import (
 from dwd_mcp_server.geocoding import GeocodingError, resolve_location
 
 # Initialize MCP server
-mcp = FastMCP("DWD Weather Server")
+mcp = MCPServer("DWD Weather Server")
 
 # Initialize Bright Sky client
 client = BrightSkyClient()

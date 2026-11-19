@@ -2,11 +2,14 @@
 
 import signal
 import sys
-from types import FrameType
+from typing import TYPE_CHECKING
 
 import click
 
 from dwd_mcp_server.server import mcp
+
+if TYPE_CHECKING:
+    from types import FrameType
 
 
 def _handle_shutdown(signum: int, _frame: FrameType | None) -> None:

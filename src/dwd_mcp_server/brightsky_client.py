@@ -197,7 +197,7 @@ def format_timestamp(iso_timestamp: str | None) -> str:
         weekdays = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]
         weekday = weekdays[dt.weekday()]
         return f"{weekday}, {dt.strftime('%d.%m.%Y %H:%M')}"
-    except (ValueError, IndexError):
+    except ValueError, IndexError:
         return iso_timestamp
 
 
